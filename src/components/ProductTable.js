@@ -1,4 +1,3 @@
-// components/ProductTable.js
 import React, { useState, useEffect } from "react";
 import { Table, Button } from "antd";
 import axios from "axios";

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Table, Button, notification } from "antd";
-
 import { useDispatch, useSelector } from "react-redux";
 import { addToCompare } from "../redux/actions";
 import { fetchProducts } from "../services/api";
+
 const ProductDetails = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -16,11 +16,7 @@ const ProductDetails = () => {
   const dispatch = useDispatch();
   const compareProducts = useSelector((state) => state.compareProducts);
 
-  useEffect(() => {
-    loadProducts();
-  }, [pagination.current, pagination.pageSize]);
-
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     setLoading(true);
     try {
       const data = await fetchProducts(
@@ -36,7 +32,12 @@ const ProductDetails = () => {
       });
     }
     setLoading(false);
-  };
+    // eslint-disable-next-line
+  }, [pagination.current, pagination.pageSize]);
+
+  useEffect(() => {
+    loadProducts();
+  }, [loadProducts]);
 
   const handleTableChange = (newPagination, filters, sorter) => {
     setPagination(newPagination);
